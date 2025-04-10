@@ -22,19 +22,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup Pages
+
+      - name: Set up Node.js (for React build)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Use the version of Node.js you need
+
+      - name: Install dependencies (React)
+        run: |
+          cd path/to/your/react-app
+          npm install
+
+      - name: Build React app
+        run: |
+          cd path/to/your/react-app
+          npm run build
+
+      - name: Setup Pages for Jekyll
         uses: actions/configure-pages@v5
-      - name: Build with Jekyll
+
+      - name: Build Jekyll site
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+
+      - name: Copy React build to _site directory
+        run: |
+          cp -R path/to/your/react-app/build/* ./_site/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
